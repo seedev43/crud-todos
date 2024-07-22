@@ -88,4 +88,29 @@ const updateTodo = async (req, res) => {
   }
 };
 
-module.exports = { getTodos, getTodoById, createTodo, updateTodo };
+const deleteTodo = async (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const todo = await Todo.findByIdAndDelete(todoId);
+
+    if (!todo) {
+      return res.status(404).json({
+        success: false,
+        message: "data not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "success delete data",
+      data: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+module.exports = { getTodos, getTodoById, createTodo, updateTodo, deleteTodo };
