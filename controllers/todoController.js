@@ -16,6 +16,31 @@ const getTodos = async (req, res) => {
   }
 };
 
+const getTodoById = async (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const todo = await Todo.findById(todoId);
+
+    if (!todo) {
+      return res.status(404).json({
+        success: false,
+        message: "data not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "success get data",
+      data: todo,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
 const createTodo = async (req, res) => {
   try {
     const todo = new Todo(req.body);
@@ -35,4 +60,32 @@ const createTodo = async (req, res) => {
   }
 };
 
-module.exports = { getTodos, createTodo };
+const updateTodo = async (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const todo = await Todo.findByIdAndUpdate(todoId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!todo) {
+      return res.status(404).json({
+        success: false,
+        message: "data not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "success update data",
+      data: todo,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+module.exports = { getTodos, getTodoById, createTodo, updateTodo };
